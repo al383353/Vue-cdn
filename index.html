@@ -13,7 +13,11 @@
     <div class="nav-bar"></div>
     
     <div id="app">
-        <product :size ="size"></product>
+        <div class="cart">
+            <p :style = "styleObject">Cart [ {{cart.length}} ]</p>
+            
+        </div>
+        <product :size ="size" @add-to-cart = "updateCart" @remove-from-cart = "removeProduct"></product>
       
     </div>
     

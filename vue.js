@@ -11,7 +11,6 @@ Vue.component('product', {
                 <img :src="image"> <!-- v-bind can be shortened as :src -->
             </div>
             
-
             <div class="product-info">
                 <h2>{{brand}} {{ products }}</h2> 
                 <p>{{sale}} this is from computed property</p>
@@ -20,8 +19,9 @@ Vue.component('product', {
                 <p v-else>20% discount for 2</p>
                 <p :class="{inStock: !inStock}">Out of Stock</p>
                 <ul>
-                    <li v-for="bt in bootTypes" 
-                    :key = "bt.amount">{{bt.type}}</li>
+                    <li v-for="(bt, index) in bootTypes" 
+                    :key = "bt.amount"
+                    :@mouseover="updateIndex(index)">{{bt.type}}</li>
                 </ul>
 
                 <product-details :details = "details"></product-details>
@@ -33,13 +33,10 @@ Vue.component('product', {
                 <button v-on:click="addToCart" 
                     :disabled="!inStock"
                     :class="{disabledButton: !inStock}">Add to Cart</button>
+                <button @click="remove">Reduce Product</button>
+                
 
-                <button v-on:click="addToCart" 
-                    :disabled="cart < 0">Add to Cart</button>
-
-                <button class="cart">
-                    <p :style = "styleObject">Cart [ {{cart}} ]</p>
-                </button>
+                <button @click="addToCart">Add to Cart</button>
 
                 <div v-for = "sb in styleBind" 
                     :key="sb.amount"
@@ -61,22 +58,23 @@ Vue.component('product', {
                 moreBoots: 'https://es.aliexpress.com/item/32684886523.html',
                 onSale: true,
                 inStock: false,
+                selectedProduct: 0,
                 store: 10,
                 storeEmpty: true,
                 bootTypes: [{type:"Leather", amount: 8}, {type:"Nike", amount: 6}, {type:"Cotton", amount: 0}],
-                cart: 0,
                 styleBind: [{color:"blue", amount: 8}, {color:"green", amount: 6}, {color:"brown", amount: 0}],
-                styleObject: {
-                    fontSize: '13px',
-                    border: '1px solid brown',
-                    width: '80px'
-                },
                 details: ['80% cotton', '20% polyester', 'Gender-neutral']
             }
         },
         methods:{
             addToCart(){
-                this.cart +=1
+               this.$emit('add-to-cart', this.bootTypes[this.selectedProduct].amount)
+            },
+            remove(){
+                this.$emit('remove-from-cart', this.bootTypes[this.selectedProduct].amount)
+            },
+            updateIndex(index){
+                this.selectedProduct = index
             }
         },
         computed:{
@@ -103,6 +101,24 @@ Vue.component('product-details', {
 var app = new Vue({
     el: '#app',
     data: {
-        size: 34
+        size: 34,
+        cart: [],
+        styleObject: {
+            fontSize: '13px',
+            border: '1px solid brown',
+            width: '80px'
+        },
+    },
+    methods: {
+        updateCart(id){
+            this.cart.push(id)
+        },
+        removeProduct(id){
+            for(var i = this.cart.length-1; i>=0; i--){
+                if(this.cart[i] === id){
+                    this.cart.splice(i, 1)
+                }
+        }
+            }
     }
 })
