@@ -13,47 +13,11 @@
     <div class="nav-bar"></div>
     
     <div id="app">
-        <div class="product">
-
-            <div class="product-image">
-                <img :src="image"> <!-- v-bind can be shortened as :src -->
-            </div>
-            
-
-            <div class="product-info">
-                <h1>{{ products }}</h1> 
-                <p v-if = "onSale" >On sale</p>
-                <p v-else>No sale</p>
-                <p v-if = "store < 10">8 remaining</p>
-                <p v-else-if = "store >= 10 && store <= 20">Almost sold out</p>
-                <p v-else>20% discount for 2</p>
-                <p>{{description}}</p>
-                <ul>
-                    <li v-for="bt in bootTypes">{{bt.type}}</li>
-                </ul>
-            </div>
-            <div class="link">
-                <a v-bind:href="moreBoots">More Boots</a>
-            </div>
-        </div>
+        <product :size ="size"></product>
       
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
-    <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                products: 'Boots',
-                description: 'These are the new style Boots!',
-                image: './assets/boots.jpg',
-                moreBoots: 'https://es.aliexpress.com/item/32684886523.html',
-                onSale: true,
-                store: 10,
-                bootTypes: [{type:"Leather", amount: 8}, {type:"Nike"}, {type:"Cotton"}]
-            }
-        })
-        
-    </script>
+    <script src="vue.js"></script>
 </body>
 </html>
